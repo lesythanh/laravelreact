@@ -1,10 +1,26 @@
+import { useForm, SubmitHandler } from "react-hook-form"
+
+type Inputs = {
+    email: string
+    password: string
+}
 
 const Login = () => {
+    const {
+        register,
+        handleSubmit,
+        watch,
+        formState: { errors },
+      } = useForm<Inputs>();
+    
+      const login: SubmitHandler<Inputs> = () => console.log(123)
+
+
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
             <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
                 <h1 className="text-2xl font-bold mb-6 text-center">Login</h1>
-                <form action="">
+                <form onSubmit={handleSubmit(login)}>
                     <div className="mb-4">
                         <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">Email:</label>
                         <input 
@@ -12,7 +28,9 @@ const Login = () => {
                         id="email"
                         placeholder=""
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" 
+                        {...register("email", { required: true })}
                         />
+                        {errors.email && <span className="text-red-500 text-xs">Email is required</span>}
                     </div>
                     <div className="mb-4">
                         <label htmlFor="password" className="block text-gray-700 text-sm font-bold mb-2">Password:</label>
@@ -21,7 +39,9 @@ const Login = () => {
                         id="password"
                         placeholder=""
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" 
+                        {...register("password", { required: true })}
                         />
+                        {errors.password && <span className="text-red-500 text-xs">Password is required</span>}
                     </div>
                     <div className="mb-6">
                         <button 
