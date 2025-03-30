@@ -1,4 +1,5 @@
 import { useForm, SubmitHandler } from "react-hook-form"
+import { login } from "../services/AuthService";
 
 type Inputs = {
     email: string
@@ -13,14 +14,16 @@ const Login = () => {
         formState: { errors },
       } = useForm<Inputs>();
     
-      const login: SubmitHandler<Inputs> = () => console.log(123)
+      const loginHandler: SubmitHandler<Inputs> = (payload) => {
+        login(payload);
+      }
 
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
             <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
                 <h1 className="text-2xl font-bold mb-6 text-center">Login</h1>
-                <form onSubmit={handleSubmit(login)}>
+                <form onSubmit={handleSubmit(loginHandler)}>
                     <div className="mb-4">
                         <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">Email:</label>
                         <input 
