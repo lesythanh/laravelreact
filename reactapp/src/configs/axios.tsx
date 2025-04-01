@@ -7,4 +7,13 @@ const axiosInstance = axios.create({
     },
 })
 
+axiosInstance.interceptors.response.use(
+    response => {
+        return response.data ? response.data : response
+    },
+    error => {
+        return Promise.reject(error)
+    }
+)
+
 export default axiosInstance;

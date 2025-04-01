@@ -2,6 +2,9 @@
 namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use App\Http\Requests\AuthRequest;
+use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
@@ -11,16 +14,28 @@ class AuthController extends Controller
         // $this->middleware('auth:api', ['except' => ['login']]);
     }
 
-    public function login()
+    public function login(AuthRequest $request)
     {
-        $credentials = request(['email', 'password']);
-
-        return $credentials;
+        $credentials = [
+            'email' => $request->input('email'),
+            'password' => $request->input('password')
+        ];
 
         if (! $token = auth()->attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json(['error' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
         }
 
-        return $this->respondWithToken($token);
+        $accessTokenCookie = cookie('access_token', $token, auth()->factory()->getTTL() * 1, '/', null, false, true);
+
+        return $this->respondWithToken($token)->withCookie($accessTokenCookie);
+    }
+
+    protected function respondWithToken($token)
+    {
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => auth()->factory()->getTTL() * 1
+        ]);
     }
 }
