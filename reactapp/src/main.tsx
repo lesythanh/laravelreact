@@ -6,6 +6,8 @@ import {
 } from 'react-router-dom'
 import Login from './pages/LoginPage.tsx'
 import Dashboard from './pages/Dashboard.tsx'
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 import './index.css'
 
@@ -23,5 +25,6 @@ const router = createBrowserRouter([
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <RouterProvider router={router} />
+    <ToastContainer />
   </StrictMode>,
 )

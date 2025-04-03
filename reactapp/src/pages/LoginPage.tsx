@@ -1,5 +1,7 @@
 import { useForm, SubmitHandler } from "react-hook-form"
 import { login } from "../services/AuthService";
+import { useNavigate } from "react-router-dom";
+
 
 type Inputs = {
     email: string
@@ -7,6 +9,8 @@ type Inputs = {
 }
 
 const Login = () => {
+
+    const navigate = useNavigate();
     const {
         register,
         handleSubmit,
@@ -14,8 +18,9 @@ const Login = () => {
         formState: { errors },
       } = useForm<Inputs>();
     
-      const loginHandler: SubmitHandler<Inputs> = (payload) => {
-        login(payload);
+      const loginHandler: SubmitHandler<Inputs> = async (payload) => {
+        const logged = await login(payload);
+        logged && navigate("/dashboard");
       }
 
 
