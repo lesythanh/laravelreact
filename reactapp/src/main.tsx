@@ -11,6 +11,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastProvider } from './contexts/ToastContext.tsx';
 
 import './index.css'
+import  { store } from './redux/store.tsx'
+import { Provider } from 'react-redux';
 
 const router = createBrowserRouter([
   {
@@ -24,8 +26,12 @@ const router = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById('root')!).render(
-    <ToastProvider>
-      <RouterProvider router={router} />
-      <ToastContainer />
-    </ToastProvider>
+
+    <Provider store={store}>
+      <ToastProvider>
+        <RouterProvider router={router} />
+        <ToastContainer />
+      </ToastProvider>
+    </Provider>
+
 )
