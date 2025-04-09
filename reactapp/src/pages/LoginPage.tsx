@@ -4,6 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "../contexts/ToastContext";
 import { setToast } from "../redux/slice/toastSlice";
 import { useDispatch } from "react-redux";
+import { Button } from "@/components/ui/button"
+import { Loader2 } from "lucide-react";
+import { useState } from "react";
 
 
 type Inputs = {
@@ -23,15 +26,24 @@ const Login = () => {
         watch,
         formState: { errors },
       } = useForm<Inputs>();
+
+      const [loading, setLoading] = useState<boolean>(false);
     
       const loginHandler: SubmitHandler<Inputs> = async (payload) => {
 
-        const logged = await login(payload);
+        setLoading(true);
 
-        dispatch(setToast({message: 'Đăng nhập vào hệ thống thành công', type: 'success'}));
+        try {
+            const logged = await login(payload);
+            dispatch(setToast({message: 'Đăng nhập vào hệ thống thành công', type: 'success'}));
+            logged && navigate("/dashboard");
+        } catch (error) {
+           console.log(error);
+        } finally {
+            setLoading(false);
+        }
 
-        // setMessage('Đăng nhập vào hệ thống thành công', 'success'); -> của context
-        logged && navigate("/dashboard");
+
       }
 
 
@@ -63,14 +75,14 @@ const Login = () => {
                         {errors.password && <span className="text-red-500 text-xs">Password is required</span>}
                     </div>
                     <div className="mb-6">
-                        <button 
-                        type="submit"
-                        className="w-full px-3 py-3 text-white bg-blue-500 rounded-lg focus:outline-none hover:bg-blue-400"
-                        >
-                            Login
-                        </button>
+
+                        <Button disabled={loading} className="w-full px-3 py-3 text-white bg-blue-500 rounded-lg focus:outline-none hover:bg-blue-400">
+                            {loading ? <Loader2 className="animate-spin mr-2" /> : null}
+                            {loading ? "Loading..." : "Login"}
+                        </Button>
+
                     </div>
-                    <p className="text-center text-gray-500 text-sm">
+                    <p className="text-xs text-center text-gray-500 text-sm">
                         <a href="#" className="text-blue-500">Forgot Password</a>
                     </p>
                 </form>
