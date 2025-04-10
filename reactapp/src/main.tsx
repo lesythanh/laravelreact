@@ -8,11 +8,12 @@ import Login from './pages/LoginPage.tsx'
 import Dashboard from './pages/Dashboard.tsx'
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import { ToastProvider } from './contexts/ToastContext.tsx';
-
 import './index.css'
 import  { store } from './redux/store.tsx'
 import { Provider } from 'react-redux';
+import User from './pages/User.tsx'
+import Layout from './components/layout.tsx'
+import AuthMiddleware from './middleware/authMiddleware.tsx'
 
 const router = createBrowserRouter([
   {
@@ -20,18 +21,30 @@ const router = createBrowserRouter([
     element: <Login />,
   },
   {
-    path: '/dashboard',
-    element: <Dashboard />,
+    path: '/',
+    element: (
+      <AuthMiddleware>
+        <Layout />
+      </AuthMiddleware>
+    ),
+    children: [
+      {
+        path: '/dashboard',
+        element: <Dashboard />,
+      },
+      {
+        path: '/user',
+        element: <User />,
+      },
+    ]
   },
 ]);
 
 createRoot(document.getElementById('root')!).render(
 
     <Provider store={store}>
-      <ToastProvider>
         <RouterProvider router={router} />
         <ToastContainer />
-      </ToastProvider>
     </Provider>
 
 )

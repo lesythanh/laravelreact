@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { Button } from "@/components/ui/button"
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
+import { setAuthLogin } from "../redux/slice/authSlice";
 
 
 type Inputs = {
@@ -34,9 +35,10 @@ const Login = () => {
         setLoading(true);
 
         try {
-            const logged = await login(payload);
+            const auth = await login(payload);
             dispatch(setToast({message: 'Đăng nhập vào hệ thống thành công', type: 'success'}));
-            logged && navigate("/dashboard");
+            dispatch(setAuthLogin(auth));
+            auth && navigate("/dashboard");
         } catch (error) {
            console.log(error);
         } finally {
