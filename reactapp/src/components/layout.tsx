@@ -4,7 +4,7 @@ import { showToast } from "../helpers/myHelper";
 import { RootState } from "../redux/store";
 import { useSelector, useDispatch } from "react-redux";
 import { clearToast } from "../redux/slice/toastSlice";
-
+import { fetchUser } from "../services/AuthService";
 
 const Layout: React.FC = () => {
 
@@ -12,11 +12,15 @@ const Layout: React.FC = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-            
         showToast(message, type)
         dispatch(clearToast())
-
     }, [message, type]); 
+
+    useEffect(() => {
+
+         fetchUser()
+
+    }, [message, type]);
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">

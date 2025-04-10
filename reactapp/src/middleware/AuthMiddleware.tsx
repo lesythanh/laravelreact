@@ -10,28 +10,16 @@ type ProtectedRouteProps = PropsWithChildren
 
 const AuthMiddleware = ({children} : ProtectedRouteProps) => {
 
-    const navigate = useNavigate();
-    const {isAuthenticated, user } = useSelector((state: RootState) => state.auth);
+    // const navigate = useNavigate();
+    // const {isAuthenticated, user } = useSelector((state: RootState) => state.auth);
 
-    if(!isAuthenticated || user === null) {
-        navigate('/admin');
-    }else {
-        return children
-    }
-
-    // useEffect(() => {
-    //     console.log(isAuthenticated, user);
-        
-    //     // if(!isAuthenticated) {
-    //     //     window.location.href = '/login';
-    //     // }else if(user) {
-    //     //     window.location.href = '/';
-    //     // }
-
+    // useEffect(() => {        
+    //     if(!isAuthenticated || user === null) {
+    //         navigate('/admin');
+    //     }
     // }, [isAuthenticated, user]); 
-    
-    console.log(children);
-    return children;
+    // return isAuthenticated && user ? children : null;
+    return children ;
 }
 
 export default AuthMiddleware;
