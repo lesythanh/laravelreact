@@ -1,6 +1,5 @@
 import { handleAxiosError } from "../helpers/axiosHelpers";
-import axiosInstance from "../configs/axios";
-import { setAuthLogin } from "../redux/slice/authSlice";
+import axios from "../configs/axios";
 import { User } from "../types/User";
 
 type LoginPayload = {
@@ -12,7 +11,7 @@ type LoginPayload = {
 const login = async (payload:LoginPayload): Promise<User | null> => {
     try {
 
-        const response = await axiosInstance.post('/auth/login', {
+        const response = await axios.post('/auth/login', {
             email: payload.email,
             password: payload.password,
         });
@@ -27,9 +26,8 @@ const login = async (payload:LoginPayload): Promise<User | null> => {
 
 const fetchUser = async (): Promise<User | null> => {
     try {
-        const response = await axiosInstance.get('/auth/me');
-        console.log(response);
-        return response
+        const response = await axios.get('/auth/me');
+        return response.data.user;
         
         // return response.data.user;
     } catch (error) {

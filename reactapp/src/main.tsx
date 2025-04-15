@@ -14,11 +14,16 @@ import { Provider } from 'react-redux';
 import User from './pages/User.tsx'
 import Layout from './components/layout.tsx'
 import AuthMiddleware from './middleware/authMiddleware.tsx'
+import NoAuthMiddleware from './middleware/NoAuthMiddleware.tsx'
 
 const router = createBrowserRouter([
   {
     path: '/admin',
-    element: <Login />,
+    element: (
+      <NoAuthMiddleware>
+        <Login />
+      </NoAuthMiddleware>
+    )
   },
   {
     path: '/',

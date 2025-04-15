@@ -5,6 +5,7 @@ import { RootState } from "../redux/store";
 import { useSelector, useDispatch } from "react-redux";
 import { clearToast } from "../redux/slice/toastSlice";
 import { fetchUser } from "../services/AuthService";
+import { setAuthLogin } from "../redux/slice/authSlice";
 
 const Layout: React.FC = () => {
 
@@ -15,12 +16,6 @@ const Layout: React.FC = () => {
         showToast(message, type)
         dispatch(clearToast())
     }, [message, type]); 
-
-    useEffect(() => {
-
-         fetchUser()
-
-    }, [message, type]);
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
