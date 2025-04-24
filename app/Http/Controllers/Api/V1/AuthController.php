@@ -53,8 +53,9 @@ class AuthController extends Controller
                 $request->headers->set('Authorization', 'Bearer ' . $token);
             }
             $user = JWTAuth::parseToken()->authenticate();
-
+            
             $token = auth()->refresh();
+            auth()->invalidate(true);
             $refreshTokenData = $this->refreshTokenData($user);
             $refreshToken = JWTAuth::getJWTProvider()->encode($refreshTokenData);
             $cookie = $this->setTokenAndRefreshTokenCookie($token, $refreshToken);
@@ -66,8 +67,15 @@ class AuthController extends Controller
         } catch (TokenExpiredException $e) {
 
             if($request->hasCookie('refresh_token')) {
+
+                if ($request->cookie('refresh_token')) {
+                    return response()->json(['message' => 'Token has expired'], Response::HTTP_UNAUTHORIZED);
+                }
+
                 $refreshTokenCookie = $request->cookie('refresh_token');
+
                 $refreshTokenDecoded = JWTAuth::getJWTProvider()->decode($refreshTokenCookie);
+
                 $user = User::find($refreshTokenDecoded['user_id']);
                 $token = auth()->login($user);
 
@@ -78,16 +86,15 @@ class AuthController extends Controller
                 $tokenCookie = $cookie['token'];
                 $refreshCookie = $cookie['refreshToken'];
 
-
                 return $this->respondWithToken($token, $refreshToken, $user)->withCookie($tokenCookie)->withCookie($refreshCookie);
                 
             }
 
-            return response()->json(['message' => 'Token has expired'], 401);
+            return response()->json(['message' => 'Token has expired'], Response::HTTP_UNAUTHORIZED);
         } catch (JWTException $e) {
-            return response()->json(['message' => 'Token is invalid'], 401);
+            return response()->json(['message' => 'Token is invalid'], Response::HTTP_UNAUTHORIZED);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Token not found'], 500);
+            return response()->json(['message' => 'Token not found'], Response::HTTP_UNAUTHORIZED);
         }
     }
 
@@ -114,7 +121,7 @@ class AuthController extends Controller
         $cookie = Cookie::make(
             'access_token',
             $token,
-            auth()->factory()->getTTL() * 60 * 24,
+            auth()->factory()->getTTL() * 24,
             '/',
             null,
             true,
@@ -144,13 +151,14 @@ class AuthController extends Controller
     private function refreshTokenData($user) {
         return [
             'user_id' => $user->id,
-            'expires_in' => time() + config('jwt.refresh_ttl'),
+            // 'expires_in' => time() + config('jwt.refresh_ttl'),
+            'expires_in' => time() + 1,
             'random' => time().md5(rand())
         ];
     }
 
     private function refreshToken($user, $refreshToken) {
-        $refreshTokenData = $this->refreshTokenData($user);
-        return JWTAuth::getJWTProvider()->encode($refreshTokenData);
+        // $refreshTokenData = $this->refreshTokenData($user);
+        // return JWTAuth::getJWTProvider()->encode($refreshTokenData);
     }
 }

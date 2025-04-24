@@ -21,18 +21,17 @@ class Jwt
         try {
             if ($request->hasCookie('access_token')) {
                 $token = $request->cookie('access_token');
-    
                 $request->headers->set('Authorization', 'Bearer ' . $token);
             }
             
             $user = JWTAuth::parseToken()->authenticate();
             
         } catch (TokenExpiredException $e) {
-            return response()->json(['message' => 'Token has expired'], 401);
+            return response()->json(['message' => 'Token has expired'], Response::HTTP_UNAUTHORIZED);
         } catch (JWTException $e) {
-            return response()->json(['message' => 'Token is invalid'], 401);
+            return response()->json(['message' => 'Token is invalid'], Response::HTTP_UNAUTHORIZED);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Token not found'], 500);
+            return response()->json(['message' => 'Token not found'], Response::HTTP_UNAUTHORIZED);
         }
         
         return $next($request);
