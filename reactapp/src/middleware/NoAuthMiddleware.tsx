@@ -16,7 +16,6 @@ const NoAuthMiddleware = ({children} : ProtectedRouteProps) => {
     useEffect(() => {
 
         const checkAuthentication = async () => {
-
             try {
                 const userData = await fetchUser();
                 if(userData !== null) {

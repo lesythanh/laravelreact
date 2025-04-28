@@ -29,7 +29,6 @@ const fetchUser = async (): Promise<User | null> => {
         const response = await axios.get('/auth/me');
         return response.data.user;
         
-        // return response.data.user;
     } catch (error) {
         handleAxiosError(error);
         return null;
