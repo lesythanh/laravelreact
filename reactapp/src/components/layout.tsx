@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { clearToast } from "../redux/slice/toastSlice";
 import Header from "./Header";
 import Aside from "./Aside";
+import '../assets/scss/Style.scss'
 
 const Layout: React.FC = () => {
 
