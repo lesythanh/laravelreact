@@ -21,9 +21,9 @@ const Layout: React.FC = () => {
         <div className="page">
                 {/* <Header /> */}
                 <Aside />
-                {/* <div className="main-content">
+                <div className="main-content">
                     <Outlet />
-                </div> */}
+                </div>
         </div>
     );
 }
